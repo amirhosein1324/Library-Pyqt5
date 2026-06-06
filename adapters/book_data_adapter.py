@@ -1,4 +1,4 @@
-import models.model as model
+from models.book import Book
 import sqlite3
 import datetime
 
@@ -15,7 +15,7 @@ class BookDataAdapter:
 
     @staticmethod
     def get_all():
-        connection = sqlite3.connect("NewLibrary.db")
+        connection = sqlite3.connect("data/NewLibrary.db")
         cursor = connection.cursor()
         sql = "SELECT id,title,product_code,age_group,publisher_id,release_date,price,author_id,category_id,designer_id,language_id,translator_id,resource_id from books LEFT JOIN book_author on book_author.book_id==books.id LEFT JOIN book_category on book_category.book_id==books.id LEFT JOIN book_designer on book_designer.book_id==books.id LEFT JOIN book_language on book_language.book_id==books.id LEFT JOIN book_translator on book_translator.book_id==books.id LEFT JOIN resources_book on resources_book.book_id==books.id "
         table = list(cursor.execute(sql))
@@ -91,7 +91,7 @@ class BookDataAdapter:
                     book_resources.append(
                         resources[resources.index(res_row[12])])
 
-            books.append(model.Book(
+            books.append(Book(
                 id=book_id,
                 title=title,
                 product_code=product_code,
@@ -117,7 +117,7 @@ class BookDataAdapter:
         return newbooks
 
     def delete(id: int):
-        connection = sqlite3.connect("NewLibrary.db")
+        connection = sqlite3.connect("data/NewLibrary.db")
         cursor = connection.cursor()
         n = cursor.execute("Select * from books where id=={}".format(id))
         if len(list(n)) == 0:
@@ -147,8 +147,8 @@ class BookDataAdapter:
             connection.close()
             return True
 
-    def insert(book: model.Book):
-        connection = sqlite3.connect("NewLibrary.db")
+    def insert(book: Book):
+        connection = sqlite3.connect("data/NewLibrary.db")
         cursor = connection.cursor()
         title = book.title
         code = book.product_code
@@ -201,7 +201,7 @@ class BookDataAdapter:
 
     @staticmethod
     def search(name: str = "", author_name: str = "", publisher_name: str = "", category_name: str = "", language_name: str = "", designer_name: str = "", translator_name: str = "", resource_name: str = ""):
-        connection = sqlite3.connect("NewLibrary.db")
+        connection = sqlite3.connect("data/NewLibrary.db")
         cursor = connection.cursor()
         publishers = PublisherDataAdapter.PublisherDataAdapter.search(
             publisher_name) if publisher_name != "" else PublisherDataAdapter.PublisherDataAdapter.search("")
@@ -331,7 +331,7 @@ class BookDataAdapter:
                     book_resources.append(
                         resources[resources.index(res_row[12])])
 
-            books.append(model.Book(
+            books.append(Book(
                 id=book_id,
                 title=title,
                 product_code=product_code,

@@ -1,4 +1,4 @@
-import models.publisher as Publisher
+from models.publisher import Publisher
 import sqlite3
 import datetime
 
@@ -8,14 +8,14 @@ class PublisherDataAdapter:
 
     @staticmethod
     def get_all():
-        connection = sqlite3.connect("NewLibrary.db")
+        connection = sqlite3.connect("data/NewLibrary.db")
         cursor = connection.cursor()
         table = list(cursor.execute("SELECT * FROM publishers;"))
         connection.close()
         return [Publisher(row[0], row[1], row[2], row[3]) for row in table]
 
     def insert(publisher: Publisher):
-        connection = sqlite3.connect("NewLibrary.db")
+        connection = sqlite3.connect("data/NewLibrary.db")
         cursor = connection.cursor()
         cursor.execute("INSERT INTO publishers (`name`,`address`,`website`) VALUES ('{}','{}','{}');".format(
             publisher.name, publisher.address, publisher.website))
@@ -25,7 +25,7 @@ class PublisherDataAdapter:
         return Publisher(a, publisher.name, publisher.address, publisher.website)
 
     def delete(id: int):
-        connection = sqlite3.connect("NewLibrary.db")
+        connection = sqlite3.connect("data/NewLibrary.db")
         cursor = connection.cursor()
         n = cursor.execute("Select * from publishers where id=={}".format(id))
         if len(list(n)) == 0:
@@ -47,7 +47,7 @@ class PublisherDataAdapter:
 
     @staticmethod
     def search(name: str):
-        connection = sqlite3.connect("NewLibrary.db")
+        connection = sqlite3.connect("data/NewLibrary.db")
         cursor = connection.cursor()
         s = cursor.execute(
             "Select * from publishers where name like '%{}%'".format(name))

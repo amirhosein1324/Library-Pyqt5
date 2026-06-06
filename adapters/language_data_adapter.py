@@ -1,11 +1,11 @@
-import models.language as Language
+from models.language import Language
 import sqlite3
 import datetime
 
 class LanguageDataAdapter:
     @staticmethod
     def get_all():
-        connection = sqlite3.connect("NewLibrary.db")
+        connection = sqlite3.connect("data/NewLibrary.db")
         cursor = connection.cursor()
 
         table = list(cursor.execute("SELECT * FROM languages;"))
@@ -13,7 +13,7 @@ class LanguageDataAdapter:
         return [Language(row[0], row[1]) for row in table]
 
     def insert(language: Language):
-        connection = sqlite3.connect("NewLibrary.db")
+        connection = sqlite3.connect("data/NewLibrary.db")
         cursor = connection.cursor()
 
         cursor.execute(
@@ -24,7 +24,7 @@ class LanguageDataAdapter:
         return Language(a, language.name)
 
     def delete(id: int):
-        connection = sqlite3.connect("NewLibrary.db")
+        connection = sqlite3.connect("data/NewLibrary.db")
         cursor = connection.cursor()
 
         n = cursor.execute("Select * from languages where id=={}".format(id))
@@ -46,7 +46,7 @@ class LanguageDataAdapter:
 
     @staticmethod
     def search(name: str):
-        connection = sqlite3.connect("NewLibrary.db")
+        connection = sqlite3.connect("data/NewLibrary.db")
         cursor = connection.cursor()
 
         s = cursor.execute(
