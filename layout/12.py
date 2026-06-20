@@ -1,11 +1,9 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction
+
 from styles import APP_STYLE
-
-
+from PyQt5.QtGui import QIcon
 class AuthorPage(QWidget):
     def __init__(self):
         super().__init__()
@@ -90,7 +88,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("My Application")
-        self.setGeometry(100, 100, 700, 400)
+        self.setGeometry(100, 100, 800, 500)
         self.setup_menu()
         self.setup_central_widget()
 
@@ -100,7 +98,7 @@ class MainWindow(QMainWindow):
         book_menu = menu.addMenu("Book")
         member_menu = menu.addMenu("Members")
         Setting_menu = menu.addMenu("Setting")
-        help_menu = menu.addMenu("Help")
+        help_menu =menu.addMenu("Help")
 
         book_menu.addAction(QAction("Add", self))
         book_menu.addAction(QAction("Edit", self))
@@ -130,30 +128,64 @@ class MainWindow(QMainWindow):
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
 
-        # Sidebar چپ
+        left_panell = QWidget()
+        left_panell.setObjectName("left_panell")
+        left_panell.setFixedWidth(50)
+        left_layout2 = QVBoxLayout(left_panell)
+        left_layout2.setContentsMargins(0, 7, 2, 0)
+        left_layout2.setSpacing(0)
+        button_book = QPushButton("")
+        button_book.setIcon(QIcon("img/book(w).svg"))
+
+        button_user = QPushButton("")
+        button_user.setIcon(QIcon("img/user(w).svg"))
+
+        button_author = QPushButton("")
+        button_author.setIcon(QIcon("img/pencil-alt(W).svg"))
+
+        button_publisher = QPushButton("")
+        button_publisher.setIcon(QIcon("img/newspaper(W).svg"))
+
+        button_trans = QPushButton("")
+        button_trans.setIcon(QIcon("img/earth-americas(W).svg"))
+
+        button_language = QPushButton("")
+        button_language.setIcon(QIcon("img/language(W).svg"))
+
+        button_category = QPushButton("")
+        button_category.setIcon(QIcon("img/layer-group(W).svg"))
+
+        button_designer = QPushButton("")
+        button_designer.setIcon(QIcon("img/compass-drafting(W).svg"))
+
+        button_resources = QPushButton("")
+        button_resources.setIcon(QIcon("img/file-brackets-curly(W).svg"))
+
+
+        left_layout2.addWidget(button_book)
+        left_layout2.addWidget(button_user)
+        left_layout2.addWidget(button_author)
+        left_layout2.addWidget(button_publisher)
+        left_layout2.addWidget(button_trans)
+        left_layout2.addWidget(button_language)
+        left_layout2.addWidget(button_category)
+        left_layout2.addWidget(button_designer)
+        left_layout2.addWidget(button_resources)
+
+        left_layout2.addStretch()
+
         left_panel = QWidget()
         left_panel.setObjectName("left_panel")
-        left_panel.setFixedWidth(70)
-
+        left_panel.setFixedWidth(140)
         left_layout = QVBoxLayout(left_panel)
-        left_layout.setContentsMargins(0, 10, 0, 10)
-        left_layout.setSpacing(10)
-        left_layout.setAlignment(Qt.AlignTop)
+        left_layout.setContentsMargins(0, 7, 2, 0)
+        left_layout.setSpacing(0)
 
-        self.btn_authors = QPushButton()
-        self.btn_authors.setIcon(QIcon("icons/authors.png"))  # مسیر آیکن خودت
-        self.btn_authors.setIconSize(QSize(24, 24))
-        self.btn_authors.setFixedSize(50, 50)
-        self.btn_authors.setToolTip("Authors")
+        self.btn_authors = QPushButton("Authors")
+        self.btn_books = QPushButton("Books")
 
-        self.btn_books = QPushButton()
-        self.btn_books.setIcon(QIcon("icons/books.png"))  # مسیر آیکن خودت
-        self.btn_books.setIconSize(QSize(24, 24))
-        self.btn_books.setFixedSize(50, 50)
-        self.btn_books.setToolTip("Books")
-
-        left_layout.addWidget(self.btn_authors, alignment=Qt.AlignHCenter)
-        left_layout.addWidget(self.btn_books, alignment=Qt.AlignHCenter)
+        left_layout.addWidget(self.btn_authors)
+        left_layout.addWidget(self.btn_books)
         left_layout.addStretch()
 
         right_panel = QWidget()
@@ -165,14 +197,14 @@ class MainWindow(QMainWindow):
         self.author_page = AuthorPage()
         self.book_page = BookPage()
 
-        self.stack.addWidget(self.author_page)
-        self.stack.addWidget(self.book_page)
+        # self.stack.addWidget(self.author_page)
+        # self.stack.addWidget(self.book_page)
 
         right_layout.addWidget(self.stack)
 
         self.btn_authors.clicked.connect(lambda: self.stack.setCurrentIndex(0))
         self.btn_books.clicked.connect(lambda: self.stack.setCurrentIndex(1))
-
+        main_layout.addWidget(left_panell)
         main_layout.addWidget(left_panel)
         main_layout.addWidget(right_panel, 1)
 
@@ -185,19 +217,3 @@ if __name__ == "__main__":
     window.show()
 
     sys.exit(app.exec_())
-
-from PyQt5.QtWidgets import QApplication, QPushButton, QWidget, QVBoxLayout
-from PyQt5.QtGui import QIcon
-import sys
-
-app = QApplication(sys.argv)
-
-window = QWidget()
-layout = QVBoxLayout(window)
-
-button = QPushButton("Click Me")
-button.setIcon(QIcon("home-lg-alt.svg"))
-layout.addWidget(button)
-
-window.show()
-sys.exit(app.exec_())
