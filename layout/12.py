@@ -43,6 +43,90 @@ class AuthorPage(QWidget):
         layout.setRowStretch(4, 1)
 
 
+from PyQt5.QtWidgets import (
+    QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel,
+    QLineEdit, QPushButton, QScrollArea, QFrame, QSizePolicy
+)
+from PyQt5.QtCore import Qt
+
+class BookPage(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setObjectName("book_page")
+        self.setup_ui()
+
+    def setup_ui(self):
+        main_layout = QVBoxLayout(self)
+        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setSpacing(12)
+
+        # Search bar
+        search_layout = QHBoxLayout()
+        search_label = QLabel("Search:")
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText("Search books...")
+        self.search_input.textChanged.connect(self.filter_books)
+
+        search_layout.addWidget(search_label)
+        search_layout.addWidget(self.search_input)
+
+        # Scroll area for books
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+
+        self.books_container = QWidget()
+        self.books_layout = QVBoxLayout(self.books_container)
+        self.books_layout.setAlignment(Qt.AlignTop)
+        self.books_layout.setSpacing(10)
+
+        self.scroll_area.setWidget(self.books_container)
+
+        # Add-book form
+        form_frame = QFrame()
+        form_layout = QGridLayout(form_frame)
+        form_layout.setHorizontalSpacing(12)
+        form_layout.setVerticalSpacing(12)
+
+        book_title_label = QLabel("Book Title :")
+        author_label = QLabel("Author :")
+        publisher_label = QLabel("Publisher :")
+
+        self.book_title_input = QLineEdit()
+        self.author_input = QLineEdit()
+        self.publisher_input = QLineEdit()
+
+        self.btn_add_book = QPushButton("Add Book")
+        self.btn_add_book.setObjectName("btn_add_book")
+
+        form_layout.addWidget(book_title_label, 0, 0)
+        form_layout.addWidget(self.book_title_input, 0, 1)
+        form_layout.addWidget(author_label, 1, 0)
+        form_layout.addWidget(self.author_input, 1, 1)
+        form_layout.addWidget(publisher_label, 2, 0)
+        form_layout.addWidget(self.publisher_input, 2, 1)
+        form_layout.addWidget(self.btn_add_book, 3, 1)
+
+        main_layout.addLayout(search_layout)
+        main_layout.addWidget(self.scroll_area)
+        main_layout.addWidget(form_frame)
+
+
+def set_books(self, books):
+    # clear old widgets
+    while self.books_layout.count():
+        item = self.books_layout.takeAt(0)
+        widget = item.widget()
+        if widget:
+            widget.deleteLater()
+
+    self.all_books = books
+
+    for book in books:
+        label = QLabel(f"{book['title']} - {book['author']} - {book['publisher']}")
+        label.setStyleSheet("padding: 8px; border: 1px solid #ccc; border-radius: 6px;")
+        self.books_layout.addWidget(label)
+
+
 class BookPage(QWidget):
     def __init__(self):
         super().__init__()
