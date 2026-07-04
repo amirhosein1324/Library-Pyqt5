@@ -6,14 +6,14 @@ class DesignerDataAdapter:
 
     @staticmethod
     def get_all():
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         table = list(cursor.execute("SELECT * FROM cover_designers;"))
         connection.close()
         return [CoverDesigner(row[0], row[1], datetime.date.fromisoformat(row[2]), row[3]) for row in table]
 
     def insert(designer: CoverDesigner):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         cursor.execute("INSERT INTO cover_designers (`name`,`birthdate`,`nationality`) VALUES ('{}','{}','{}');".format(
             designer.name, designer.birthdate, designer.nationality))
@@ -23,7 +23,7 @@ class DesignerDataAdapter:
         return CoverDesigner(a, designer.name, designer.birthdate, designer.nationality)
 
     def delete(id: int):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         n = cursor.execute(
             "Select * from cover_designers where id=={}".format(id))
@@ -46,7 +46,7 @@ class DesignerDataAdapter:
 
     @staticmethod
     def search(name: str):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         s = cursor.execute(
             "Select * from cover_designers where name like '%{}%'".format(name))

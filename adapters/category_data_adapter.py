@@ -7,7 +7,7 @@ class CategoryDataAdapter:
 
     @staticmethod
     def get_all():
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
 
         table = list(cursor.execute("SELECT * FROM categories;"))
@@ -15,7 +15,7 @@ class CategoryDataAdapter:
         return [Category(row[0], row[1]) for row in table]
 
     def insert(category: Category):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
 
         cursor.execute(
@@ -26,7 +26,7 @@ class CategoryDataAdapter:
         return Category(a, category.name)
 
     def delete(id: int):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
 
         n = cursor.execute("Select * from categories where id=={}".format(id))
@@ -49,7 +49,7 @@ class CategoryDataAdapter:
 
     @staticmethod
     def search(name: str):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
 
         s = cursor.execute(

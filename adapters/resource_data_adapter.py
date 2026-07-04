@@ -8,14 +8,14 @@ class ResourcesDataAdapter:
 
     @staticmethod
     def get_all():
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         table = list(cursor.execute("SELECT * FROM resources;"))
         connection.close()
         return [Resources(row[0], row[1]) for row in table]
 
     def insert(resource: Resources):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         cursor.execute(
             "INSERT INTO resources (`name`) VALUES ('{}');".format(resource.name))
@@ -25,7 +25,7 @@ class ResourcesDataAdapter:
         return Resources(a, resource.name)
 
     def delete(id: int):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         n = cursor.execute("Select * from resources where id=={}".format(id))
         if len(list(n)) == 0:
@@ -46,7 +46,7 @@ class ResourcesDataAdapter:
 
     @staticmethod
     def search(name: str):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         s = cursor.execute(
             "Select * from resources where name like '%{}%'".format(name))

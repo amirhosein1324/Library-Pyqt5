@@ -10,11 +10,12 @@ import adapters.translator_data_adapter as TranslatorDataAdapter
 import adapters.resource_data_adapter as ResourcesDataAdapter
 
 import adapters.book_data_adapter as BookDataAdapter
+#
+# connection = sqlite3.connect("data/NewLibrary.db")
+# cursor = connection.cursor()
 
-connection = sqlite3.connect("NewLibrary.db")
-cursor = connection.cursor()
-
-model.Book.books =  BookDataAdapter.BookDataAdapter.get_all()
+s =  BookDataAdapter.BookDataAdapter.get_all()
+print(s)
 # print("all books:")
 # for i in (model.Book.books):
 #     print("id:", i.id, " , title:", i.title, " , product_code:", i.product_code, " , categories:", [[j.id, j.name] for j in i.categories], " , age_group:", i.age_group, " , authors:", [[j.id, j.name] for j in i.authors], " , publisher:", [

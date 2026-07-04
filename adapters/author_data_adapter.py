@@ -2,10 +2,13 @@ from models.author import Author
 import sqlite3
 import datetime
 
+
+
 class AuthorDataAdapter:
+
     @staticmethod
     def update(id:int,name:str,birthdate: datetime.date,nationality:str):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         s = cursor.execute("""Update authors
                                    SET name='{}',birthdate='{}',nationality='{}'
@@ -16,7 +19,7 @@ class AuthorDataAdapter:
         
     @staticmethod
     def get_one(id: int):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         s = cursor.execute("Select * from authors where id=={}".format(id))
         lis = []
@@ -27,7 +30,7 @@ class AuthorDataAdapter:
 
     @staticmethod
     def get_all():
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         table = list(cursor.execute("SELECT * FROM authors;"))
         connection.close()
@@ -35,7 +38,7 @@ class AuthorDataAdapter:
 
     @staticmethod
     def delete(id: int):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         s = cursor.execute("Select * from authors where id=={}".format(id))
         if len(list(s)) == 0:
@@ -55,7 +58,7 @@ class AuthorDataAdapter:
                 return False
 
     def insert(author: Author):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         cursor.execute("INSERT INTO authors (`name`,`birthdate`,`nationality`) VALUES ('{}','{}','{}');".format(
             author.name, author.birthdate, author.nationality))
@@ -66,7 +69,7 @@ class AuthorDataAdapter:
 
     @staticmethod
     def search(name: str):
-        connection = sqlite3.connect("data/NewLibrary.db")
+        connection = sqlite3.connect("../data/NewLibrary.db")
         cursor = connection.cursor()
         s = cursor.execute(
             "Select * from authors where name like '%{}%'".format(name))

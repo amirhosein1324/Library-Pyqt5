@@ -13,6 +13,7 @@ from models.translator import Translator
 from models.resource import Resources
 from models.book import Book
 
+
 import adapters.author_data_adapter as AuthorDataAdapter
 import adapters.publisher_data_adapter as PublisherDataAdapter
 import adapters.category_data_adapter as CategoryDataAdapter
