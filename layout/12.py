@@ -228,6 +228,8 @@ class MainWindow(QMainWindow):
         button_author.setIcon(QIcon("img/pencil-alt(W).svg"))
 
         button_publisher = QPushButton("")
+
+        
         button_publisher.setIcon(QIcon("img/newspaper(W).svg"))
 
         button_trans = QPushButton("")
