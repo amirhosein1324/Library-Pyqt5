@@ -1,218 +1,49 @@
-# book_database
+Library-PyQt5: A Robust Relational Library Management Engine
+Motivation
+Managing a library’s metadata—spanning authors, publishers, translators, and complex book relations—often leads to fragmented, error-prone database code. While Python’s sqlite3 provides a powerful engine, implementing a consistent interface for relational CRUD operations and cross-referencing is a recurring challenge.
 
+Library-PyQt5 was created to bridge this gap. It provides an abstraction layer over raw SQL, allowing developers to manage library records using intuitive Python objects. By separating data models from database adapters, this project ensures that developers spend less time writing boilerplate SQL queries and more time building functional library tools.
 
----
+Architecture
+This project follows a modular design pattern, ensuring that data definitions, persistence, and interface logic remain decoupled.
 
-## 📁 Files
+Model Layer (model.py): Defines the core data entities and their relationships.
+Adapter Layer (LibraryDataAdapter.py): The engine that translates high-level Python commands into secure SQL operations.
+Interface Layer (main.py): Provides a terminal-based CLI for end-to-end management.
+Storage Layer (Library.sql, NewLibrary.db): Uses SQLite for portable, persistent storage.
+Features
+Relational Mapping: Handles multi-author, multi-translator, and multi-category assignments seamlessly.
+Advanced Search Engine: Provides a powerful filtering mechanism for books based on any metadata field (Author, Publisher, Designer, etc.).
+Simplified CLI: Executes database operations through human-readable commands.
+Extensible Design: Easily integrate new modules or UI frameworks (like PyQt5) by interacting with the DataAdapter.
+Quick Start (CLI)
+Run the application to manage records via the terminal:
 
-| Files | |
-|------|-------------|
-| model.py : All classes are in this file. |
-| LibraryDataAdapter.py : All the work we do in SQL is in this file. |
-| main.py : All requests are stated in this file. |
-| Library.sql : SQL script to create the database. |
-| NewLibrary.db : SQLite database file that saves data.|
-| test.py : file for test the main code |
+bash
+python main.py
+Command Examples
+Add Author: insert author [name] [birthdate] [nationality]
+Add Book: insert book [title] [product_code] [categories] ...
+Delete Record: delete book [book_id]
+Programmatic Usage (test.py)
+For advanced data querying and integration, utilize the LibraryDataAdapter:
 
+python
+from LibraryDataAdapter import BookDataAdapter
 
+# Perform complex search with filters
+results = BookDataAdapter.search(name="the whis", publisher_name="Press")
 
---- 
-### 🟥 ` model.py`  code :
-
-##### in this code , all tables and features are constructed and used very frequently .
----
-
-### 🟧 ` libraryDataAdapter.py`  code :
-
-##### this code will do all of the tasks to add and delete and search in the tables .  
-
----
-### 🟪 ` main.py`  code :
-
-##### use this files terminal to add and remove books and authors , etc.
----
-
-### ➕ Add / ➖ Delete Objects
-
-#### ⚠️ note : these text should be written in the main files `terminal`  ( ` main.py ` )
-- **Add Author**  
-  ``` python
-  insert author [name] [birthdate] [nationality]
-  ```  
-- **Delete Author**  
-  ```python
-  delete author [author_id]
-  ```  
-
-- **Add Publisher**  
-  ```python
-  insert publisher [name] [address] [website]
-  ```  
-- **Delete Publisher**  
-  ```python
-  delete publisher [publisher_id]
-  ```  
-
-- **Add Language**  
-  ```python
-  insert language [name]
-  ```  
-- **Delete Language**  
-  ```python
-  delete language [language_id]
-  ```  
-
-- **Add Cover Designer**  
-  ```python
-  insert designer [name] [birthdate] [nationality]
-  ```  
-- **Delete Cover Designer**  
-  ```python
-  delete designer [designer_id]
-  ```  
-
-- **Add Translator**  
-  ```python
-  insert translator [name] [language]
-  ```  
-- **Delete Translator**  
-  ```python
-  delete translator [translator_id]
-  ```  
-
-- **Add Resource**  
-  ```python
-  insert resource [name]
-  ```  
-- **Delete Resource**  
-  ```python
-  delete resource [resource_id]
-  ```  
-
-- **Add Category**  
-  ```python
-  insert category [name]
-  ```  
-- **Delete Category**  
-  ```python
-  delete category [category_id]
-  ```  
-- **Add Book**  
-  ```python
-  insert book [title] [product_code] [categories] [age_group] [release_date] [authors] [price] [langugaes] [publisher_id] [designers] [translators] [resources]
-  ```  
-- **Delete book**
-  ``` python
-  Delete book : delete book [book_id]  
-  ``` 
----
-### 🔍 Search
-
-  #### ⚠️ note : These codes should be written in the test file (`test.py`)
-
-  ```python
-  s = LibraryDataAdapter.("Table name")DataAdapter.search("name")
-  ```
-
-  #### for example , search among Authors:
-
-  ```python
-  s = LibraryDataAdapter.AuthorDataAdapter.search("Hana")
-  ```
-
-  the code will receive the author 's name and on the basis of the name among the same authors .
-  #### and also for categories :
-
-  ```python
-  s = LibraryDataAdapter.CategoryDataAdapter.search("fiction")
-  ```
-  tables name for search:
-
- - `AuthorDataAdapter` 
-
- - PublisherDataAdapter
-
- - `CategoryDataAdapter`
-
- - LanguageDataAdapter
-
- - `DesignerDataAdapter`
-
- - TranslatorDataAdapter
-
- - `ResourcesDataAdapter`
-
-### 📙 Book search (the strengths of the code)
-
-- 🟡 code :
-
-  ```python
-  s = LibraryDataAdapter.BookDataAdapter.search([filters])
-  ```
-
-  #### filters you can apply :
-
-    | | |
-    |------|-------------|
-    | name | translator_name |
-    | author_name  | resource_name |
-    | publisher_name | designer_name|
-    | category_name | language_name |
-  
-
-- 🟢 example :
-
-  ```python
-  s = LibraryDataAdapter.BookDataAdapter.search(
-    name="the whis", publisher_name="Press")
-  ```
-#### and file you can see the objects id , name , age group , etc by this code :
-  ```python
-  for i in s:
-    print("id:", i.id, " , title:", i.title, " , product_code:", i.product_code, " , categories:", [[j.id, j.name] for j in i.categories], " , age_group:", i.age_group, " , authors:", [[j.id, j.name] for j in i.authors], " , publisher:", [
-          i.publisher.id, i.publisher.name], " , release_date:", i.release_date, " , price:", i.price, " , languages:", [[j.id, j.name] for j in i.languages], " , cover_designers", [[j.id, j.name] for j in i.cover_designers], " , translators:", [[j.id, j.name] for j in i.translators], " , resources:", [[j.id, j.name] for j in i.resources], "\n")
-   ```
-
-
-
-
-##  How to work
-
-1. Run the main script:  
-   ```bash
-   python main.py
-   ```  
-2. Enter a command, e.g.:  
-   ```
-   insert author Jim 2000-01-01 German
-   ```   
-   ```
-   insert book nlbook 1050 [1] Adlut 2000-10-25 [1] 75 [1,2] 3 [1] [2] [4]
-   ```  
-   ```
-   delete book 5
-   ```
-   ```
-   delete author 2
-   ```  
-3. ⚪ If you want , you can search in the tables with `test.py`  , example :
-   ```python
-    s = LibraryDataAdapter.TranslatorDataAdapter.search("pedro")
-   ```  
----
-
-## ⚙️ Underlying Technology
-
-- Uses Python and the built-in `sqlite3` module to manage a lightweight SQL database. :contentReference[oaicite:0]{index=0}  
-- The adapter handles database connection, query execution, insertion, deletion and commit — ensuring persistent storage.  
-- `Library.sql` can be used to (re)create database schema from scratch if needed.  
-
----
-
-## 👍 Why This Project
-
-This project serves as a simple but extensible example of a relational data-based library system. The system can store rich metadata: multiple authors per book, multiple languages, categories, cover designers, translators, sources, publishers, and more - allowing for complex modeling of a book library beyond simple title/author pairs.  
-
----
-  
-thanks for reading
+for book in results:
+    print(f"ID: {book.id} | Title: {book.title} | Publisher: {book.publisher.name}")
+Technology Stack
+Language: Python 3.x
+Persistence: SQLite3
+Design Pattern: Data Adapter / MVC-inspired
+Interface: Command Line (Extensible to PyQt5)
+Installation & Setup
+Clone the repository:
+bash
+   git clone https://github.com/amirhosein1324/Library-Pyqt5
+Initialize Database:Use Library.sql to generate the schema if the database file is missing.
+Run: Execute main.py to begin managing your library.
