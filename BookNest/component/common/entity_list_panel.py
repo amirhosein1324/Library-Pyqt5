@@ -2,10 +2,54 @@ import os
 from typing import Callable
 
 from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtGui import QPainter, QColor, QPen
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QScrollArea, QPushButton, QLineEdit
 
 _PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 _STYLE_PATH = os.path.join(_PROJECT_ROOT, "layout", "styles", "leftpanelstyles.qss")
+
+
+class _AddButton(QPushButton):
+
+    def __init__(self):
+        super().__init__()
+        self.setObjectName("addButton")
+        self.setFixedSize(36, 36)
+        self.setCursor(Qt.PointingHandCursor)
+        self.setToolTip("Add new")
+
+    def enterEvent(self, event):
+        super().enterEvent(event)
+        self.update()
+
+    def leaveEvent(self, event):
+        super().leaveEvent(event)
+        self.update()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing)
+
+        if self.isDown():
+            fill_color = QColor("#10a877")
+        elif self.underMouse():
+            fill_color = QColor("#22e39f")
+        else:
+            fill_color = QColor("#16c98d")
+
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(fill_color)
+        painter.drawEllipse(self.rect())
+
+        pen = QPen(QColor("#0e1512"))
+        pen.setWidth(2)
+        pen.setCapStyle(Qt.RoundCap)
+        painter.setPen(pen)
+
+        center = self.rect().center()
+        arm = int(self.rect().width() * 0.26)
+        painter.drawLine(center.x() - arm, center.y(), center.x() + arm, center.y())
+        painter.drawLine(center.x(), center.y() - arm, center.x(), center.y() + arm)
 
 
 class EntityListPanel(QWidget):
@@ -42,9 +86,7 @@ class EntityListPanel(QWidget):
         top_row.addWidget(self.search_edit)
 
         if show_add_button:
-            self.add_btn = QPushButton("+")
-            self.add_btn.setObjectName("addButton")
-            self.add_btn.setFixedSize(34, 34)
+            self.add_btn = _AddButton()
             top_row.addWidget(self.add_btn)
 
         layout.addLayout(top_row)
