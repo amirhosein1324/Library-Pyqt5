@@ -91,6 +91,15 @@ QWidget#author_page, QWidget#book_page {
     color: #eceef2;
 }
 
+QWidget#emptyState {
+    background-color: #17191f;
+}
+
+QLabel#emptyStateLabel {
+    color: #6d7280;
+    font-size: 11pt;
+}
+
 QLabel {
     color: #eceef2;
     font-size: 10pt;
