@@ -5,10 +5,10 @@ from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QAction, QHBoxLayout, QVBoxLayout,
-    QPushButton, QStackedWidget, QButtonGroup,
+    QPushButton, QStackedWidget, QButtonGroup, QLabel,
 )
 
-from layout.styles.styles import APP_STYLE
+from styles.styles import APP_STYLE
 
 from component.book.book_menu import BookWin
 from component.book.Book_form import BookForm
@@ -134,12 +134,24 @@ class MainWindow(QMainWindow):
         nav_group = QButtonGroup(self)
         nav_group.setExclusive(True)
 
+        empty_state = QWidget()
+        empty_state.setObjectName("emptyState")
+        empty_layout = QVBoxLayout(empty_state)
+        empty_label = QLabel("موردی را از لیست انتخاب کنید یا با دکمه + یک مورد جدید اضافه کنید")
+        empty_label.setObjectName("emptyStateLabel")
+        empty_label.setAlignment(Qt.AlignCenter)
+        empty_label.setWordWrap(True)
+        empty_layout.addWidget(empty_label)
+        self.right_stack.addWidget(empty_state)
 
         book_page = BookWin()
-        book_form = BookForm()
+        book_form = BookForm(right_stack=self.right_stack)
         self.left_stack.addWidget(book_page)
         self.right_stack.addWidget(book_form)
-        book_page.item_clicked.connect(lambda _name: self.right_stack.setCurrentWidget(book_form))
+        book_page.item_clicked.connect(book_form.on_item_clicked)
+        book_page.add_btn.clicked.connect(lambda: self._show_add_book_form(book_form))
+        book_form.book_saved.connect(book_page.reload)
+        book_form.form_cancelled.connect(lambda: self.right_stack.setCurrentWidget(empty_state))
 
         book_btn = _NavButton("book", tooltip="Books")
         book_btn.setChecked(True)
@@ -171,9 +183,14 @@ class MainWindow(QMainWindow):
         icon_layout.addStretch()
         return icon_bar
 
+    def _show_add_book_form(self, book_form):
+        book_form.reset_form()
+        self.right_stack.setCurrentWidget(book_form)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setStyle("Fusion")
     app.setStyleSheet(APP_STYLE)
 
     window = MainWindow()
