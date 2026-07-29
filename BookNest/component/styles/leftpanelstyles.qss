@@ -1,0 +1,50 @@
+QScrollArea#mainScroll {
+    border: none;
+    background-color: transparent;
+}
+
+QWidget#contentWidget {
+    background-color: #1a1d24;
+}
+
+QPushButton#boButton {
+    background-color: transparent;
+    color: #c7cbd3;
+    border: none;
+    font-size: 13px;
+    padding: 10px 12px;
+    text-align: left;
+    border-radius: 8px;
+}
+
+QPushButton#boButton:hover {
+    background-color: #232730;
+    color: white;
+}
+
+QPushButton#boButton:pressed {
+    background-color: #16c98d;
+    color: #0e1512;
+}
+
+#searchBox {
+    background-color: #20242c;
+    color: #eceef2;
+    border: 1px solid #2e333e;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 13px;
+    selection-background-color: #16c98d;
+    selection-color: #0e1512;
+}
+
+#searchBox::placeholder {
+    color: #6d7280;
+}
+
+#searchBox:focus {
+    border: 1px solid #16c98d;
+}
+
+
+
