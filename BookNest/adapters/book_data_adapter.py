@@ -136,6 +136,42 @@ class BookDataAdapter:
                     "INSERT INTO resources_book (book_id, resource_id) VALUES (?, ?);", (book_id, resource.id))
 
     @staticmethod
+    def update(book: Book):
+        with get_connection() as connection:
+            connection.execute(
+                """UPDATE books SET title = ?, product_code = ?, age_group = ?, publisher_id = ?,
+                   release_date = ?, price = ? WHERE id = ?;""",
+                (book.title, book.product_code, book.age_group, book.publisher.id,
+                 str(book.release_date), book.price, book.id),
+            )
+
+            connection.execute("DELETE FROM book_author WHERE book_id = ?;", (book.id,))
+            connection.execute("DELETE FROM book_category WHERE book_id = ?;", (book.id,))
+            connection.execute("DELETE FROM book_designer WHERE book_id = ?;", (book.id,))
+            connection.execute("DELETE FROM book_language WHERE book_id = ?;", (book.id,))
+            connection.execute("DELETE FROM book_translator WHERE book_id = ?;", (book.id,))
+            connection.execute("DELETE FROM resources_book WHERE book_id = ?;", (book.id,))
+
+            for author in book.authors:
+                connection.execute(
+                    "INSERT INTO book_author (book_id, author_id) VALUES (?, ?);", (book.id, author.id))
+            for category in book.categories:
+                connection.execute(
+                    "INSERT INTO book_category (book_id, category_id) VALUES (?, ?);", (book.id, category.id))
+            for designer in book.cover_designers:
+                connection.execute(
+                    "INSERT INTO book_designer (book_id, designer_id) VALUES (?, ?);", (book.id, designer.id))
+            for language in book.languages:
+                connection.execute(
+                    "INSERT INTO book_language (book_id, language_id) VALUES (?, ?);", (book.id, language.id))
+            for translator in book.translators:
+                connection.execute(
+                    "INSERT INTO book_translator (book_id, translator_id) VALUES (?, ?);", (book.id, translator.id))
+            for resource in book.resources:
+                connection.execute(
+                    "INSERT INTO resources_book (book_id, resource_id) VALUES (?, ?);", (book.id, resource.id))
+
+    @staticmethod
     def search(name: str = "", author_name: str = "", publisher_name: str = "", category_name: str = "",
                language_name: str = "", designer_name: str = "", translator_name: str = "", resource_name: str = ""):
 
