@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 
+BookNest.zip
 .venv
 # Virtual environments
 .venv/
