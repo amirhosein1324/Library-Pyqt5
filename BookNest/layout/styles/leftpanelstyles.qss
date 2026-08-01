@@ -1,0 +1,72 @@
+/* Main Form & Dialog Background */
+QWidget {
+    background-color: #2F3542; /* Medium-Dark Slate Gray */
+    color: #F1F2F6;            /* Light Gray Text */
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 14px;
+}
+
+/* Input Fields (QLineEdit, QTextEdit, QComboBox, QSpinBox) */
+QLineEdit, QTextEdit, QComboBox, QSpinBox {
+    background-color: #57606F; /* Lighter Gray for Inputs */
+    color: #FFFFFF;
+    border: 1px solid #747D8C;
+    border-radius: 6px;
+    padding: 6px 10px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QComboBox:focus, QSpinBox:focus {
+    border: 2px solid #70A1FF; /* Sky Blue Highlight */
+    background-color: #474754;
+}
+
+/* Labels */
+QLabel {
+    color: #E2E8F0;
+    font-weight: 500;
+}
+
+/* Primary Buttons */
+QPushButton {
+    background-color: #70A1FF; /* Sky Blue Accent */
+    color: #1E272C;            /* Dark Gray Text for High Contrast */
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+}
+
+QPushButton:hover {
+    background-color: #5352ED; /* Deeper Sky Blue on Hover */
+    color: #FFFFFF;
+}
+
+QPushButton:pressed {
+    background-color: #3742FA;
+}
+
+/* Secondary / Cancel Buttons */
+QPushButton#cancelButton, QPushButton[secondary="true"] {
+    background-color: #747D8C;
+    color: #FFFFFF;
+}
+
+QPushButton#cancelButton:hover, QPushButton[secondary="true"]:hover {
+    background-color: #A4B0BE;
+}
+
+/* GroupBoxes & Form Containers */
+QGroupBox {
+    border: 1px solid #747D8C;
+    border-radius: 8px;
+    margin-top: 12px;
+    padding-top: 10px;
+    font-weight: bold;
+    color: #70A1FF; /* Sky Blue Title */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 5px;
+}

@@ -1,0 +1,58 @@
+/* ===== Form Styles ===== */
+
+#form {
+    background-color: #17191f;
+}
+
+#form QLabel {
+    color: #b7bcc6;
+    padding-top: 10px;
+    font-size: 10pt;
+}
+
+#form QLineEdit {
+    background-color: #20242c;
+    border: 1px solid #2e333e;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: #ffffff;
+    selection-background-color: #16c98d;
+    selection-color: #0e1512;
+}
+
+#form QLineEdit:focus {
+    border: 1px solid #16c98d;
+}
+
+#form QLineEdit:read-only {
+    color: #8b93a3;
+    background-color: #1a1d24;
+}
+
+#form QPushButton {
+    background-color: #16c98d;
+    color: #0e1512;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#form QPushButton:hover {
+    background-color: #22e39f;
+}
+
+#form QPushButton:pressed {
+    background-color: #10a877;
+}
+
+#title {
+    background-color: #16c98d;
+    border-radius: 8px;
+    font-size: 11pt;
+    font-weight: 700;
+    padding: 12px 16px;
+    color: #0e1512;
+}
