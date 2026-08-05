@@ -1,43 +1,72 @@
 from models.category import Category
-from adapters.db import get_connection
+import sqlite3
+import datetime
 
 
 class CategoryDataAdapter:
+    @staticmethod
+    def update(id: int, name: str):
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
+        s = cursor.execute("""Update categories
+                                   SET name='{}'
+                                   where id={};""".format(name, id))
+        connection.commit()
+        connection.close()
+        return
 
     @staticmethod
     def get_all():
-        with get_connection() as connection:
-            rows = connection.execute("SELECT id, name FROM categories;").fetchall()
-        return [Category(row[0], row[1]) for row in rows]
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
 
-    @staticmethod
+        table = list(cursor.execute("SELECT * FROM categories;"))
+        connection.close()
+        return [Category(row[0], row[1]) for row in table]
+
     def insert(category: Category):
-        with get_connection() as connection:
-            cursor = connection.execute(
-                "INSERT INTO categories (name) VALUES (?);", (category.name,))
-            new_id = cursor.lastrowid
-        return Category(new_id, category.name)
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
 
-    @staticmethod
+        cursor.execute(
+            "INSERT INTO categories (`name`) VALUES ('{}');".format(category.name))
+        connection.commit()
+        a = cursor.lastrowid
+        connection.close()
+        return Category(a, category.name)
+
     def delete(id: int):
-        with get_connection() as connection:
-            exists = connection.execute(
-                "SELECT id FROM categories WHERE id = ?;", (id,)).fetchone()
-            if not exists:
-                return False
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
 
-            in_use = connection.execute(
-                "SELECT 1 FROM book_category WHERE category_id = ? LIMIT 1;", (id,)).fetchone()
-            if in_use:
-                return False
+        n = cursor.execute("Select * from categories where id=={}".format(id))
+        if len(list(n)) == 0:
+            connection.close()
+            return False
+        else:
+            s = cursor.execute(
+                "Select * from book_category where category_id=={}".format(id))
 
-            connection.execute("DELETE FROM categories WHERE id = ?;", (id,))
-        return True
+            if len(list(s)) == 0:
+                cursor.execute(
+                    "Delete from categories where id=={}".format(id))
+                connection.commit()
+                connection.close()
+                return True
+            else:
+                connection.close()
+                return False
 
     @staticmethod
-    def search(name: str = ""):
-        with get_connection() as connection:
-            rows = connection.execute(
-                "SELECT id, name FROM categories WHERE name LIKE ?;",
-                (f"%{name}%",)).fetchall()
-        return [Category(row[0], row[1]) for row in rows]
+    def search(name: str):
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
+
+        s = cursor.execute(
+            "Select * from categories where name like '%{}%'".format(name))
+        lis = []
+        for i in s:
+            lis.append(Category(i[0], i[1]))
+        connection.close()
+        return lis
+

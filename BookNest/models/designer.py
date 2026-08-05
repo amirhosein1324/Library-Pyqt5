@@ -1,7 +1,11 @@
 import datetime
 
-
 class CoverDesigner:
+    id: int = 0
+    name: str = ""
+    birthdate: datetime.date = datetime.date.today()
+    nationality: str = ""
+    cover_designers: list = []
 
     def __init__(self, id: int, name: str, birthdate: datetime.date, nationality: str):
         self.id = id
@@ -12,6 +16,7 @@ class CoverDesigner:
     def __eq__(self, other):
         if isinstance(other, int):
             return self.id == other
-        if isinstance(other, CoverDesigner):
+        elif isinstance(other, CoverDesigner):
             return self.id == other.id
-        return NotImplemented
+        else:
+            return

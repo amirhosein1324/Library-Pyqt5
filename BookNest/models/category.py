@@ -1,4 +1,10 @@
+import datetime
+
+
 class Category:
+    id: int = 0
+    name: str = ""
+    categories: list = []
 
     def __init__(self, id: int, name: str):
         self.id = id
@@ -7,8 +13,9 @@ class Category:
     def __eq__(self, other):
         if isinstance(other, str):
             return self.name == other
-        if isinstance(other, int):
+        elif isinstance(other, int):
             return self.id == other
-        if isinstance(other, Category):
+        elif isinstance(other, Category):
             return self.name == other.name
-        return NotImplemented
+        else:
+            return

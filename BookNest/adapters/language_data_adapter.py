@@ -1,43 +1,69 @@
 from models.language import Language
-from adapters.db import get_connection
-
+import sqlite3
+import datetime
 
 class LanguageDataAdapter:
-
+    @staticmethod
+    def update(id: int, name: str):
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
+        s = cursor.execute("""Update languages
+                                   SET name='{}'
+                                   where id={};""".format(name, id))
+        connection.commit()
+        connection.close()
+        return
     @staticmethod
     def get_all():
-        with get_connection() as connection:
-            rows = connection.execute("SELECT id, name FROM languages;").fetchall()
-        return [Language(row[0], row[1]) for row in rows]
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
 
-    @staticmethod
+        table = list(cursor.execute("SELECT * FROM languages;"))
+        connection.close()
+        return [Language(row[0], row[1]) for row in table]
+
     def insert(language: Language):
-        with get_connection() as connection:
-            cursor = connection.execute(
-                "INSERT INTO languages (name) VALUES (?);", (language.name,))
-            new_id = cursor.lastrowid
-        return Language(new_id, language.name)
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
 
-    @staticmethod
+        cursor.execute(
+            "INSERT INTO languages (`name`) VALUES ('{}');".format(language.name,))
+        connection.commit()
+        a = cursor.lastrowid
+        connection.close()
+        return Language(a, language.name)
+
     def delete(id: int):
-        with get_connection() as connection:
-            exists = connection.execute(
-                "SELECT id FROM languages WHERE id = ?;", (id,)).fetchone()
-            if not exists:
-                return False
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
 
-            in_use = connection.execute(
-                "SELECT 1 FROM book_language WHERE language_id = ? LIMIT 1;", (id,)).fetchone()
-            if in_use:
-                return False
+        n = cursor.execute("Select * from languages where id=={}".format(id))
+        if len(list(n)) == 0:
+            connection.close()
+            return False
+        else:
+            s = cursor.execute(
+                "Select * from book_language where language_id=={}".format(id))
 
-            connection.execute("DELETE FROM languages WHERE id = ?;", (id,))
-        return True
+            if len(list(s)) == 0:
+                cursor.execute("Delete from languages where id=={}".format(id))
+                connection.commit()
+                connection.close()
+                return True
+            else:
+                connection.close()
+                return False
 
     @staticmethod
-    def search(name: str = ""):
-        with get_connection() as connection:
-            rows = connection.execute(
-                "SELECT id, name FROM languages WHERE name LIKE ?;",
-                (f"%{name}%",)).fetchall()
-        return [Language(row[0], row[1]) for row in rows]
+    def search(name: str):
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
+
+        s = cursor.execute(
+            "Select * from languages where name like '%{}%'".format(name))
+        lis = []
+        for i in s:
+            lis.append(Language(i[0], i[1]))
+        connection.close()
+        return lis
+

@@ -1,4 +1,12 @@
+import datetime
+
+
 class Publisher:
+    id: int = 0
+    name: str = ""
+    address: str = ""
+    website: str = ""
+    publishers: list = []
 
     def __init__(self, id: int, name: str, address: str, website: str):
         self.id = id
@@ -9,6 +17,7 @@ class Publisher:
     def __eq__(self, other):
         if isinstance(other, int):
             return self.id == other
-        if isinstance(other, Publisher):
+        elif isinstance(other, Publisher):
             return self.id == other.id
-        return NotImplemented
+        else:
+            return

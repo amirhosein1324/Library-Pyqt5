@@ -1,45 +1,67 @@
 from models.publisher import Publisher
-from adapters.db import get_connection
+import sqlite3
+import datetime
+
 
 
 class PublisherDataAdapter:
-
+    @staticmethod
+    def update(id:int,name:str,address: str,website:str):
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
+        s = cursor.execute("""Update publishers
+                                   SET name='{}',address='{}',website='{}'
+                                   where id={};""".format(name,address,website,id))
+        connection.commit()
+        connection.close()
+        return
     @staticmethod
     def get_all():
-        with get_connection() as connection:
-            rows = connection.execute(
-                "SELECT id, name, address, website FROM publishers;").fetchall()
-        return [Publisher(row[0], row[1], row[2], row[3]) for row in rows]
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
+        table = list(cursor.execute("SELECT * FROM publishers;"))
+        connection.close()
+        return [Publisher(row[0], row[1], row[2], row[3]) for row in table]
 
-    @staticmethod
     def insert(publisher: Publisher):
-        with get_connection() as connection:
-            cursor = connection.execute(
-                "INSERT INTO publishers (name, address, website) VALUES (?, ?, ?);",
-                (publisher.name, publisher.address, publisher.website))
-            new_id = cursor.lastrowid
-        return Publisher(new_id, publisher.name, publisher.address, publisher.website)
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO publishers (`name`,`address`,`website`) VALUES ('{}','{}','{}');".format(
+            publisher.name, publisher.address, publisher.website))
+        connection.commit()
+        a = cursor.lastrowid
+        connection.close()
+        return Publisher(a, publisher.name, publisher.address, publisher.website)
 
-    @staticmethod
     def delete(id: int):
-        with get_connection() as connection:
-            exists = connection.execute(
-                "SELECT id FROM publishers WHERE id = ?;", (id,)).fetchone()
-            if not exists:
-                return False
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
+        n = cursor.execute("Select * from publishers where id=={}".format(id))
+        if len(list(n)) == 0:
+            connection.close()
+            return False
+        else:
+            s = cursor.execute(
+                "Select publisher_id from books where publisher_id=={}".format(id))
 
-            in_use = connection.execute(
-                "SELECT 1 FROM books WHERE publisher_id = ? LIMIT 1;", (id,)).fetchone()
-            if in_use:
+            if len(list(s)) == 0:
+                cursor.execute(
+                    "Delete from publishers where id=={}".format(id))
+                connection.commit()
+                connection.close()
+                return True
+            else:
+                connection.close()
                 return False
-
-            connection.execute("DELETE FROM publishers WHERE id = ?;", (id,))
-        return True
 
     @staticmethod
-    def search(name: str = ""):
-        with get_connection() as connection:
-            rows = connection.execute(
-                "SELECT id, name, address, website FROM publishers WHERE name LIKE ?;",
-                (f"%{name}%",)).fetchall()
-        return [Publisher(row[0], row[1], row[2], row[3]) for row in rows]
+    def search(name: str):
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
+        s = cursor.execute(
+            "Select * from publishers where name like '%{}%'".format(name))
+        lis = []
+        for i in s:
+            lis.append(Publisher(i[0], i[1], i[2], i[3]))
+        connection.close()
+        return lis

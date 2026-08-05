@@ -1,50 +1,74 @@
 from models.translator import Translator
-from adapters.db import get_connection
-from adapters.language_data_adapter import LanguageDataAdapter
+import sqlite3
+import datetime
+import adapters.language_data_adapter as LanguageDataAdapter
 
 
 class TranslatorDataAdapter:
+    @staticmethod
+    def update(id:int,name:str,language:str):
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
 
+        s = cursor.execute("""Update translators
+                                   SET name='{}',language='{}'
+                                   where id={};""".format(name,language,id))
+        connection.commit()
+        connection.close()
+        return
     @staticmethod
     def get_all():
-        with get_connection() as connection:
-            rows = connection.execute(
-                "SELECT id, name, language FROM translators;").fetchall()
-        languages = LanguageDataAdapter.get_all()
-        return [
-            Translator(row[0], row[1], [lang for lang in languages if lang.name == row[2]])
-            for row in rows
-        ]
+        
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
+        table = list(cursor.execute("SELECT * FROM translators;"))
+        languages = LanguageDataAdapter.LanguageDataAdapter.get_all()
+        connection.close()
+        return [Translator(row[0], row[1], list(filter(lambda lang: lang.name == row[2], languages))) for row in table]
 
-    @staticmethod
     def insert(translator: Translator):
-        with get_connection() as connection:
-            cursor = connection.execute(
-                "INSERT INTO translators (name, language) VALUES (?, ?);",
-                (translator.name, translator.languages))
-            new_id = cursor.lastrowid
-        return Translator(new_id, translator.name, translator.languages)
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
 
-    @staticmethod
+        cursor.execute("INSERT INTO translators (`name`,`language`) VALUES ('{}','{}');".format(
+            translator.name, translator.languages))
+        connection.commit()
+        a = cursor.lastrowid
+        connection.close()
+        return Translator(a, translator.name, translator.languages)
+
     def delete(id: int):
-        with get_connection() as connection:
-            exists = connection.execute(
-                "SELECT id FROM translators WHERE id = ?;", (id,)).fetchone()
-            if not exists:
-                return False
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
 
-            in_use = connection.execute(
-                "SELECT 1 FROM book_translator WHERE translator_id = ? LIMIT 1;", (id,)).fetchone()
-            if in_use:
-                return False
+        n = cursor.execute("Select * from translators where id=={}".format(id))
+        if len(list(n)) == 0:
+            connection.close()
+            return False
+        else:
+            s = cursor.execute(
+                "Select * from book_translator where translator_id=={}".format(id))
 
-            connection.execute("DELETE FROM translators WHERE id = ?;", (id,))
-        return True
+            if len(list(s)) == 0:
+                cursor.execute(
+                    "Delete from translators where id=={}".format(id))
+                connection.commit()
+                connection.close()
+                return True
+            else:
+                connection.close()
+                return False
 
     @staticmethod
-    def search(name: str = ""):
-        with get_connection() as connection:
-            rows = connection.execute(
-                "SELECT id, name, language FROM translators WHERE name LIKE ?;",
-                (f"%{name}%",)).fetchall()
-        return [Translator(row[0], row[1], row[2]) for row in rows]
+    def search(name: str):
+        connection = sqlite3.connect("../data/NewLibrary.db")
+        cursor = connection.cursor()
+
+        s = cursor.execute(
+            "Select * from translators where name like '%{}%'".format(name))
+        lis = []
+        for i in s:
+            lis.append(Translator(i[0], i[1], i[2]))
+        connection.close()
+        return lis
+
