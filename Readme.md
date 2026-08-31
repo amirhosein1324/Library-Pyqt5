@@ -6,11 +6,11 @@ Pick a category from the icon rail on the left, search or scroll through the lis
 
 ## Screenshots
 
-**Browsing the publisher catalog**
-![BookNest — browsing publishers](docs/Screenshot (1798).png)
+Browsing the publisher catalog 
+![BookNest — browsing publishers](BookNest/docs/screenshot-form.png)
 
-**Viewing an author's details**
-![BookNest — author details](docs/Screenshot (1799).png)
+Viewing an author's details 
+![BookNest — author details](BookNest/docs/screenshot-form2.png)
 
 ## Getting started
 
